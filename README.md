@@ -1,6 +1,6 @@
 # hw3
 首先先連接上wifi
-![image]()
+![image](https://github.com/yuchen0816/hw3/blob/main/截圖%202021-05-19%20下午2.07.33.png)
 
 接著
 
