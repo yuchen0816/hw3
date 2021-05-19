@@ -19,5 +19,7 @@ line表示40度
 按下user button確認角度
 ![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9605.JPG)
 
-接著輸入/tilt/run 進入到
+接著輸入/tilt/run 進入到tilt mode
 ![image](https://github.com/yuchen0816/hw3/blob/main/截圖%202021-05-19%20下午2.10.16.png)
+
+按下user button開始量測角度並顯示在uLCD上
