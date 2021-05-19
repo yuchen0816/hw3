@@ -25,7 +25,7 @@ line表示40度
 按下user button開始量測角度
 
 並將大於所選角度的角度顯示在uLCD上
-![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9607.JPG)
+![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9606.JPG)
 
 大於所選角度十次時tilt mode將會結束
 ![image](https://github.com/yuchen0816/hw3/blob/main/截圖%202021-05-19%20下午2.12.59.png)
