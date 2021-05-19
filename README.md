@@ -23,4 +23,4 @@ line表示40度
 ![image](https://github.com/yuchen0816/hw3/blob/main/截圖%202021-05-19%20下午2.10.16.png)
 
 按下user button開始量測角度並顯示在uLCD上
-![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9606.JPG）
+![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9607.JPG)
