@@ -17,4 +17,4 @@ line表示40度
 ![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9603.JPG)
 
 按下user button確認角度
-![image](https://github.com/yuchen0816/hw3/blob/main/IMG_960.JPG)
+![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9605.JPG)
