@@ -9,3 +9,9 @@
 
 ring表示30度
 ![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9602.JPG)
+
+slope表示35度
+![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9604.JPG)
+
+line表示40度
+![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9603.JPG)
