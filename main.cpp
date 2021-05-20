@@ -28,22 +28,21 @@ Thread thread, t;
 EventQueue queue(64 * EVENTS_EVENT_SIZE);
 InterruptIn sw0(USER_BUTTON);
 WiFiInterface *wifi;
-
 int16_t PDataXYZ[3] = {0};
 int16_t rDataXYZ[3] = {0};
 uLCD_4DGL uLCD(D1, D0, D2);
-DigitalOut myled(LED1);
+DigitalOut myled1(LED1);
 DigitalOut myled2(LED2);
 DigitalOut myled3(LED3);
 
-int Count = 0;
-int ThresholdCount = 10;
-int stop1 = 1;
-int stop2 = 1;
+int counter = 0;
+int s1 = 1;
+int s2 = 1;
 double value = 0;
 int idR[32] = {0};
 int indexR = 0;
-int confirm = 0, angle = 0;
+int confirm = 0; 
+int angle = 0;
 constexpr int kTensorArenaSize = 60 * 1024;
 uint8_t tensor_arena[kTensorArenaSize];
 MQTT::Client<MQTTNetwork, Countdown> *rpcclient;
@@ -53,22 +52,6 @@ volatile bool closed = false;
 const char* topic = "Mbed";
 Thread mqtt_thread(osPriorityHigh);
 EventQueue mqtt_queue;
-
-void Confirm_print() {
-  printf("\nConfirm \n");
-  uLCD.cls();
-  uLCD.color(RED);
-  uLCD.text_width(1);
-  uLCD.text_height(2);
-  uLCD.printf("\nConfirm !\n");
-  uLCD.printf("\nThreshold angle = %d\n",angle );
-  myled = 0;
-}
-
-void Confirm_angle() {
-   confirm = 1;
-   mqtt_queue.call(&Confirm_print);
-}
 
 int PredictGesture(float* output) {
   // How many times the most recent gesture has been matched in a row
@@ -106,28 +89,6 @@ int PredictGesture(float* output) {
   last_predict = -1;
 
   return this_predict;
-}
-
-
-// I2C Communication
-I2C i2c_lcd(D14,D15); // SDA, SCL
-
-TextLCD_I2C lcd(&i2c_lcd, 0x4E, TextLCD::LCD16x2);  // I2C bus, PCF8574 Slaveaddress, LCD Type
-
-void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client) {
-    message_num++;
-    MQTT::Message message;
-    char buff[100];
-    sprintf(buff, "QoS0 Hello, Python! #%d", message_num);
-    message.qos = MQTT::QOS0;
-    message.retained = false;
-    message.dup = false;
-    message.payload = (void*) buff;
-    message.payloadlen = strlen(buff) + 1;
-    int rc = client->publish(topic, message);
-
-    printf("rc:  %d\r\n", rc);
-    printf("Puslish message: %s\r\n", buff);
 }
 
 void angle_select() {
@@ -266,6 +227,44 @@ void angle_select() {
   }
 }
 
+void Confirm_print() {
+  printf("\nConfirm \n");
+  uLCD.cls();
+  uLCD.color(RED);
+  uLCD.text_width(1);
+  uLCD.text_height(2);
+  uLCD.printf("\nConfirm !\n");
+  uLCD.printf("\nThreshold angle = %d\n",angle );
+  myled1 = 0;
+}
+
+void Confirm_angle() {
+   confirm = 1;
+   mqtt_queue.call(&Confirm_print);
+}
+
+
+// I2C Communication
+I2C i2c_lcd(D14,D15); // SDA, SCL
+
+TextLCD_I2C lcd(&i2c_lcd, 0x4E, TextLCD::LCD16x2);  // I2C bus, PCF8574 Slaveaddress, LCD Type
+
+void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client) {
+    message_num++;
+    MQTT::Message message;
+    char buff[100];
+    sprintf(buff, "QoS0 Hello, Python! #%d", message_num);
+    message.qos = MQTT::QOS0;
+    message.retained = false;
+    message.dup = false;
+    message.payload = (void*) buff;
+    message.payloadlen = strlen(buff) + 1;
+    int rc = client->publish(topic, message);
+
+    printf("rc:  %d\r\n", rc);
+    printf("Puslish message: %s\r\n", buff);
+}
+
 void messageArrived(MQTT::MessageData& md) {
     MQTT::Message &message = md.message;
     char msg[300];
@@ -277,14 +276,14 @@ void messageArrived(MQTT::MessageData& md) {
     printf(payload);
     ++arrivedcount;
     if (confirm == 1) {
-      stop1 = 0; 
+      s1 = 0; 
       printf("Confirm angle");
       confirm = 0;
       //queue.call(led);
     }
-    if (Count > ThresholdCount) {
-      Count = 0;
-      stop2 = 0;
+    if (counter > 10) {
+      counter = 0;
+      s2 = 0;
     }
 }
 
@@ -411,7 +410,7 @@ void angle_detect(void) {
    if (value > angle) {
     printf("angle = %g \n", value);
     mqtt_queue.call(&publish_message, rpcclient);
-    Count = Count + 1;
+    counter = counter + 1;
    }
 }
 
@@ -419,13 +418,14 @@ void initialize() {
   BSP_ACCELERO_AccGetXYZ(rDataXYZ);
   printf("%d, %d, %d\n", rDataXYZ[0], rDataXYZ[1], rDataXYZ[2]);
 }
+
 void tilt(Arguments *in, Reply *out) {
   BSP_ACCELERO_Init();
   message_num = 0;
   printf("Tilt mode");
   myled2 = 1;
   myled3 = 0;
-  stop2 = 1;
+  s2 = 1;
   confirm = 0;
   sw0.rise(&Confirm_angle);
   while (confirm == 0) {
@@ -435,7 +435,7 @@ void tilt(Arguments *in, Reply *out) {
     ThisThread::sleep_for(100ms);
   }
   myled3 = 0;
-  while (stop2) {
+  while (s2) {
     idR[indexR++] = mqtt_queue.call(angle_detect);
     indexR = indexR % 32;
     ThisThread::sleep_for(100ms);
@@ -443,10 +443,9 @@ void tilt(Arguments *in, Reply *out) {
 }
 
 void gesture(Arguments *in, Reply *out) {
-   myled = 1;
-   stop1 = 1;
+   myled1 = 1;
+   s1 = 1;
    printf("Gesture mode");
    confirm = 0;
    mqtt_queue.call(angle_select);
 }
-
