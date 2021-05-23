@@ -17,7 +17,7 @@ line表示40度
 ![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9603.JPG)
 
 按下user button確認角度
-![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9605.JPG)
+![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9613.JPG)
 
 接著輸入/tilt/run 進入到tilt mode
 ![image](https://github.com/yuchen0816/hw3/blob/main/截圖%202021-05-19%20下午2.10.16.png)
