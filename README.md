@@ -28,4 +28,4 @@ line表示40度
 ![image](https://github.com/yuchen0816/hw3/blob/main/IMG_9606.JPG)
 
 大於所選角度十次時tilt mode將會結束
-![image](https://github.com/yuchen0816/hw3/blob/main/截圖%202021-05-19%20下午2.12.59.png)
+![image](https://github.com/yuchen0816/hw3/blob/main/截圖%202021-05-23%20上午11.09.30.png)
